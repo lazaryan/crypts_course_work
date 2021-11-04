@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Курсовая работа</title>
+    <link rel="stylesheet" href="../styles/main.css">
+</head>
+<body>
+    <h1 class="main-title">Курсовая работа</h1>
+    <div class="initial-form">
+        <div class="form-title">
+            <h2>Введите свои данные</h2>
+            <button class="run-calculate" id="runCalculate">Вычислить</button>
+        </div>
+        <div class="form-line">
+            <div class="form-field">
+                <label for="firstname" class="title">Фамилия</label>
+                <input type="text" id="firstname" value="Гриценко">
+            </div>
+            <div class="form-field">
+                <label for="name" class="title">Имя</label>
+                <input type="text" id="name" value="Дмитрий">
+            </div>
+            <div class="form-field">
+                <label for="lastname" class="title">Отчество</label>
+                <input type="text" id="lastname" value="Андреевич">
+            </div>
+        </div>
+        <div class="form-line">
+            <h3 class="title">Данные для RSA</h3>
+            <div class="form-field">
+                <label for="rsa_p" class="title">P</label>
+                <input type="text" id="rsa_p" value="23">
+            </div>
+            <div class="form-field">
+                <label for="rsa_q" class="title">Q</label>
+                <input type="text" id="rsa_q" value="13">
+            </div>
+        </div>
+        <div class="form-line">
+            <h3 class="title">Данные для Цифровой подписи</h3>
+            <div class="form-field">
+                <label for="hash_p" class="title">P</label>
+                <input type="text" id="hash_p" value="31">
+            </div>
+            <div class="form-field">
+                <label for="hash_q" class="title">Q</label>
+                <input type="text" id="hash_q" value="23">
+            </div>
+        </div>
+    </div>
+    <div class="result-block des-show" id="dessWrapper" style="display: none">
+        <h2>1) Результат шифрования DES:</h2>
+        <p class="result" id="desResult"></p>
+    </div>
+    <div class="result-block des-show" id="rsaWrapper" style="display: none">
+        <h2>3) Результат работы с алгоритмом RSA:</h2>
+        <p class="result">Ключи шифрования: <span id="rsaKeys"></span></p>
+        <p class="result">Зашифрованное ФИО: <span id="rsaEncryptFIO"></span></p>
+    </div>
+    <div class="result-block des-show" id="hashWrapper" style="display: none">
+        <h2>4) Результат работы  HASH:</h2>
+        <p class="result">Результат вычисления хеша: <span id="hashResult"></span></p>
+    </div>
+    <div class="result-block des-show" id="espWrapper" style="display: none">
+        <h2>5) Результат работы цифровой подписи:</h2>
+        <p class="result">Результат вычисления цифровой подписи: <span id="ecpResult"></span></p>
+    </div>
+    <script src="../src/index.js"></script>
+</body>
+</html>
