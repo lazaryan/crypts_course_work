@@ -1,5 +1,4 @@
-
-// Permuted Choice 1 constants
+// первый блок перестановок, через который проходит исходный ключ
 var PC1 = [
     57, 49, 41, 33, 25, 17, 9,  1,
     58, 50, 42, 34, 26, 18, 10, 2,
@@ -10,7 +9,7 @@ var PC1 = [
     29, 21, 13, 5,  28, 20, 12, 4
 ];
 
-// Permuted Choice 2 constants
+// второй блок перестановок, через который проходят все сгенерированные подключи
 var PC2 = [
     14, 17, 11, 24, 1,  5,
     3,  28, 15, 6,  21, 10,
@@ -22,15 +21,16 @@ var PC2 = [
     46, 42, 50, 36, 29, 32
 ];
 
- // Cumulative bit shift constants
+// Сдвиг каждого шага генерации подключа
 const SHIFTS = [1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1]
 
 /**
-* Returns an array with arrays of the given size.
-*
-* @param myArray {Array} Array to split
-* @param chunkSize {Integer} Size of every group
-*/
+ * ## Функция разбиения массива на n равных частей
+ *
+ * @param {Array<any>} myArray - исходный массив
+ * @param {Number} chunkSize - на сколько равных блоков разбить массив
+ * @returns {Array<Array<any>>}
+ */
 const chunkArray = (myArray, chunk_size) => {
     var results = [];
     while (myArray.length) {
@@ -70,14 +70,18 @@ const keygen = (keyWords = '') => {
     // прогнали через блок перестановки
     const permutatedKeyWords = PC1.map(key => keyWords64[key])
 
+    // разбиваем слово на 2 равные части по 28 бит
     let left = parseInt(permutatedKeyWords.slice(0, 28).join(''), 2);
     let right = parseInt(permutatedKeyWords.slice(28).join(''), 2);
 
     for (i of SHIFTS) {
+        //сдвигаем обе части на i бит
         left = r28shl(left, i);
         right = r28shl(right, i);
         
+        //формируем ключ длиной 56 бит
         const newKey = (key => key.length === 56 ? key : `${'0'.repeat(56 - key.length)}${key}`)(left.toString(2) + right.toString(2));
+        //прогоняем его через блок перестановки PC2
         const permutatedNewKey = parseInt(PC2.map(item => newKey[item - 1]).join(''), 2);
 
         keys.push(permutatedNewKey)

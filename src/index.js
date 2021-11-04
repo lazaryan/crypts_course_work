@@ -1,5 +1,7 @@
+//библиотека для работы с путями
 const path = require('path');
 
+// подключаем все наши функции
 const des = require(path.join(__dirname, '..', 'src', 'des/index.js'));
 const {
     keygen: rsaKeygen,
@@ -9,6 +11,9 @@ const hash = require(path.join(__dirname, '..', 'src', 'hash/index.js'));
 const ecp = require(path.join(__dirname, '..', 'src', 'ecp/index.js'));
 const charsMap = require(path.join(__dirname, '..', 'src', 'common/map.js'));
 
+// получаем доступ к эдементам нашей страницы по id
+// к примеру у нас в `public/index.html` есть `<button class="run-calculate" id="runCalculate">Вычислить</button>`
+// с помощью `document.getElementById` мы получаем доступ к этой кнопке по ее `ID`
 const runAction = document.getElementById('runCalculate');
 
 const firstName = document.getElementById('firstname');
@@ -26,22 +31,36 @@ const rsaWrapper = document.getElementById('rsaWrapper');
 const hashWrapper = document.getElementById('hashWrapper');
 const ecpWrapper = document.getElementById('espWrapper');
 
+// вешам слушать на нажатие кнопки, т.е. когда пользователь нажмет на кнопку,
+// произойдет вызов функции
 runAction.addEventListener('click', () => {
+    //скрываем все кнопки
     desWrapper.style.display = 'none';
     rsaWrapper.style.display = 'none';
     hashWrapper.style.display = 'none';
     ecpWrapper.style.display = 'none';
 
+    //получаем сообщение, зашифрованное DES
     const encryptingDESMEssage = calculateDes();
 
+    //вставляем результат на страницу
     document.getElementById('desResult').innerHTML = encryptingDESMEssage;
+    //отображаем блок
     desWrapper.style.display = 'block';
 
+    // получаем ключи и зашифрованный текст с помощью алгоритма RSA
     const { keys: rsaKeys, encryptText: rsaEncryptText } = calculateRSA();
 
+    //вставляем данные в разметку
+    // rsaKeys - это объект, которые содержит публичный и приватный ключи.
+    //Чтоб его отобразить, необходимо провести преобразование в строку, для чего используется JSON.stringify
+    //т.е. JSON.stringify({ a: 1, b: 2 }) === "{ a: 1, b: 2 }"
     document.getElementById('rsaKeys').innerHTML = JSON.stringify(rsaKeys);
     document.getElementById('rsaEncryptFIO').innerHTML = rsaEncryptText;
+    //отображаем блок
     rsaWrapper.style.display = 'block';
+
+    //дальше логика идентичная
 
     const resultHash = calculateHash();
     document.getElementById('hashResult').innerHTML = resultHash;
@@ -93,16 +112,20 @@ const calculateDes = () => {
     return desMessage;
 }
 
+/**
+ * Функция для выисления для алгоритма RSA
+ * @returns {Object} keys - сгененрированные ключи, encryptText - зашифрованное на этих ключах сообщение
+ */
 const calculateRSA = () => {
     //получаем наши инициалы (ФИО)
     const initials = firstName.value[0] + name.value[0] + lastName.value[0];
     //преобразовываем в бинарную строку
     const convertInitials = convertStrToBin(initials);
-    console.log(convertInitials)
 
     // сгенерировали ключи
     const keys = rsaKeygen(+rsaP.value || 0, +rsaQ.value || 0);
 
+    // шифруем наше ФИО с помощью сгенерированных ключей
     const encryptText = encryptRSAMessage(convertInitials, keys);
 
     return {
@@ -111,19 +134,32 @@ const calculateRSA = () => {
     }
 }
 
+/**
+ * Функция для вычисления Hash
+ * 
+ * @returns {String}
+ */
 const calculateHash = () => {
+    //Получаем нашу Фамилию
     const firstname = firstName.value;
-    //преобразовываем в бинарную строку
-    const convertFirstname = convertStrToBin(firstname);
 
-    const hashResult = hash(convertFirstname, +rsaP.value || 1, +rsaQ.value || 1)
+    //считаем хеш с использование P, Q, которые мы ввели в поля ввода
+    const hashResult = hash(firstname, +rsaP.value || 1, +rsaQ.value || 1)
 
     return hashResult;
 }
 
+/**
+ * Функция для вычисления цифровой подписи
+ * 
+ * @returns {String}
+ */
 const calculateEcp = () => {
+    //получаем, что мы получили в результате хеширования
     const hashResult = document.getElementById('hashResult').innerHTML;
 
+    //подписываем наш хеш
+    //для этого генрируем RSA ключи на основе того, что ввели в поля ввода
     const resultEcp = ecp(+hashResult, rsaKeygen(+hashP.value || 1, +hashQ.value || 1));
 
     return resultEcp;

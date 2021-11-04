@@ -1,10 +1,19 @@
 const { smartMod } = require('../common/utils')
 
-const ecp = (message, keys) => {
-    console.log(message, keys.privateKey, smartMod(message, keys.privateKey.d, keys.privateKey.n));
-    //return smartMod(message, keys.privateKey.d, keys.privateKey.n)
-
-    return smartMod(message, keys.privateKey.d, keys.privateKey.n)
-}
+/**
+ * ## Функция вычисления Цифровой подписи для алгоритма RSA
+ * 
+ * Для цифровой подписи используется приватный ключ пользователя, т.е.
+ * Он своим приватным ключем подписывает данные, а потом любой пользователь с помошью открытого ключа (который известен всем)
+ * может лего проверить то, что данные были подписыны нужным ключем, который известен только 1-му человек
+ * 
+ * Цифровая подпись представляет из себя (message ^ privateKey.d) mod privateKey.n
+ * Для правильности вычисления используем функцию умного возведения в степень `smartMod`
+ * 
+ * @param {Number} message - исходное сообщение
+ * @param {Object} keys - ключи пользователя
+ * @returns {Number} - Цифровая подпись нашего числа
+ */
+const ecp = (message, keys) => smartMod(message, keys.privateKey.d, keys.privateKey.n)
 
 module.exports = ecp;

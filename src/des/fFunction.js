@@ -1,5 +1,6 @@
 const { toBinString, chunk } = require('../common/utils')
 
+//первая таблица перестановок (на входе)
 const EP = [
     32, 1, 2, 3, 4, 5,
     4, 5, 6, 7, 8, 9,
@@ -11,6 +12,7 @@ const EP = [
     28, 29, 30, 31, 32, 1
 ];
 
+// S блоки (8 штук)
 const S = [
     [
         14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7,
@@ -62,6 +64,7 @@ const S = [
     ]
 ];
 
+// таблица перестановок на выходе из F функции
 const P = [
     16, 7, 20, 21,
     29, 12, 28, 17,
@@ -73,13 +76,25 @@ const P = [
     22, 11, 4, 25
 ];
 
+/**
+ * ## F функция, через которую проходит каждый раунд одна половинка алгоритма `DES`
+ * 
+ * @param {String} message - последовательность бит
+ * @param {Number} key - раундовый ключ
+ * @returns {String} - преобразованная последовательность бит
+ */
 const f = (message = '', key = 0) => {
+    //прогоняем наши биты через таблицу перестановок
     const epMessage = EP.map(key => message[key - 1]).join('')
+    //ксорим его с ключем
     const xorInKey = parseInt(epMessage, 2) ^ key;
+    //если не хвататет бит, то доводим до 48, добавляя спереди нули
     const stringResultXor = toBinString(xorInKey, 48);
 
+    //разбиваем нашу строку на подстроки по 6 бит (8 штук)
     const blocks = chunk(stringResultXor, 6)
 
+    // прогоняем каждый блок через S блок, где строка - это первые 2 бита, а колонка - остальные 4
     const results = blocks.map(block => {
         const row = parseInt(block.substring(0, 2), 2)
         const column = parseInt(block.substring(2), 2)
@@ -87,8 +102,10 @@ const f = (message = '', key = 0) => {
         return S[row][column]
     })
 
+    //объеденяем все результаты работы S блоков в результирующее сообщение
     const resultMessage = results.reduce((calc, item) =>  (calc += toBinString(item, 4), calc), '');
 
+    //и прогоняем через финальную таблицу перестановок
     return P.map(key => resultMessage[key - 1]).join('')
 }
 
