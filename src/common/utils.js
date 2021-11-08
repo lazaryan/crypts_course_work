@@ -78,7 +78,18 @@ const getRandomInt = (min, max)  => {
     return Math.random() * (max - min) + min;
 }
 
+/**
+ * Функция для сдвига (чтоб не уйти в минус)
+ * @param {*} num 
+ * @param {*} shift 
+ * @returns 
+ */
+ const r28shl = (num, shift) => {
+    return ((num << shift) & 0xfffffff) | (num >>> (28 - shift));
+};
+
 module.exports.smartMod = smartMod;
 module.exports.getRandomInt = getRandomInt;
 module.exports.chunk = chunk;
 module.exports.toBinString = toBinString;
+module.exports.r28shl = r28shl;

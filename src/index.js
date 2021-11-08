@@ -3,6 +3,7 @@ const path = require('path');
 
 // подключаем все наши функции
 const des = require(path.join(__dirname, '..', 'src', 'des/index.js'));
+const gost = require(path.join(__dirname, '..', 'src', 'gost/index.js'));
 const {
     keygen: rsaKeygen,
     encryptRSAMessage
@@ -30,6 +31,7 @@ const desWrapper = document.getElementById('dessWrapper');
 const rsaWrapper = document.getElementById('rsaWrapper');
 const hashWrapper = document.getElementById('hashWrapper');
 const ecpWrapper = document.getElementById('espWrapper');
+const gostWrapper = document.getElementById('gostWrapper');
 
 // вешам слушать на нажатие кнопки, т.е. когда пользователь нажмет на кнопку,
 // произойдет вызов функции
@@ -39,6 +41,7 @@ runAction.addEventListener('click', () => {
     rsaWrapper.style.display = 'none';
     hashWrapper.style.display = 'none';
     ecpWrapper.style.display = 'none';
+    gostWrapper.style.display = 'none';
 
     //получаем сообщение, зашифрованное DES
     const encryptingDESMEssage = calculateDes();
@@ -47,6 +50,12 @@ runAction.addEventListener('click', () => {
     document.getElementById('desResult').innerHTML = encryptingDESMEssage;
     //отображаем блок
     desWrapper.style.display = 'block';
+
+    const gostResult = calculateGost();
+    //вставляем результат на страницу
+    document.getElementById('gostResult').innerHTML = gostResult;
+    //отображаем блок
+    gostWrapper.style.display = 'block';
 
     // получаем ключи и зашифрованный текст с помощью алгоритма RSA
     const { keys: rsaKeys, encryptText: rsaEncryptText } = calculateRSA();
@@ -110,6 +119,34 @@ const calculateDes = () => {
     const desMessage = des(convertToBinStr, convertToBinInitialKey);
     
     return desMessage;
+}
+
+/**
+ * Метод для вычисления алгоритма шифрования ГОСТ 28147-89
+ * 
+ * @returns {any}
+ */
+const calculateGost = () => {
+    //Для начала вычисляем собощение, которое будем шифровать,
+    // а именно первые 8 символов ФИО (ровно Фамилия)
+
+    //ГриценкоДмитрийАндреевич
+    const fio = firstName.value + name.value + lastName.value;
+    //Гриценко (8 символов)
+    const first8Chars = fio.substring(0, 8);
+    // 11000011 11110000 11101000 11110110 11100101 11101101 11101010 11101110
+    const convertToBinStr = convertStrToBin(first8Chars);
+
+    //В качетсве ключа выступают 8 символов отчества
+
+    //Андрееви
+    const initialKey = lastName.value.substring(0, 4);
+    //11000000 11101101 11100100 11110000
+    const convertToBinInitialKey = convertStrToBin(initialKey);
+
+    const result = gost(convertToBinStr, convertToBinInitialKey)
+
+    return result;
 }
 
 /**
