@@ -14,6 +14,15 @@ const { smartMod } = require('../common/utils')
  * @param {Object} keys - ключи пользователя
  * @returns {Number} - Цифровая подпись нашего числа
  */
-const ecp = (message, keys) => smartMod(message, keys.privateKey.d, keys.privateKey.n)
+const ecp = (message, keys) => {
+    console.log('%c------------ RUN ECP ---------------------', 'color: #a22');
+    console.log('Исходный текст: ', message);
+    console.log('Приватный ключ: ', keys.privateKey);
+    const result = smartMod(message, keys.privateKey.d, keys.privateKey.n);
+
+    console.log('%c------------ END ECP ---------------------', 'color: #a22');
+
+    return result;
+}
 
 module.exports = ecp;

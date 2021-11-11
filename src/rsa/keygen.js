@@ -63,9 +63,15 @@ const gcd = (a, n) => {
  * @returns {Object}
  */
 const keygen = (p, q) => {
+    console.log('%c------------ RUN GENERATE KEY FOR RSA ---------------------', 'color: #a22');
+    console.log('p: ', p);
+    console.log('q: ', q);
     const n = p * q;
+    console.log('n = p * q: ', n)
     //Считаем функцию Эйлира, которая показывает, сколько есть простых делителей числа n
     const fEilr = (p - 1) * (q - 1);
+
+    console.log('Функция Эйлира ((p - 1) * (q - 1)): ', fEilr)
 
     let e = 1;
 
@@ -77,8 +83,17 @@ const keygen = (p, q) => {
         }
     }
 
+    console.log('E, которое 1 < e < Функция Эейлира и взаимно простое с ним: ', e)
+
     // считаем мультиплекативнообратное для e и fEilr
     const d = gcd(e, fEilr);
+
+    console.log('Мултепликативно-обратное для e и Функции Эйлира (d * e = 1 mod n): ', d)
+
+    console.log('Public key {e, n}: ', { e, n })
+    console.log('Private key {d, n}: ', { d, n })
+
+    console.log('%c------------ END GENERATE KEY FOR RSA ---------------------', 'color: #a22');
 
     return {
         publicKey: { e, n },

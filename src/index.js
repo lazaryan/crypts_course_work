@@ -24,6 +24,8 @@ const lastName = document.getElementById('lastname');
 const rsaP = document.getElementById('rsa_p');
 const rsaQ = document.getElementById('rsa_q');
 
+const hashH = document.getElementById('hash_h');
+
 const hashP = document.getElementById('hash_p');
 const hashQ = document.getElementById('hash_q');
 
@@ -102,7 +104,7 @@ const calculateDes = () => {
     // а именно первые 8 символов ФИО (ровно Фамилия)
 
     //ГриценкоДмитрийАндреевич
-    const fio = firstName.value + name.value + lastName.value;
+    const fio = firstName.value + ' ' + name.value + ' ' + lastName.value;
     //Гриценко (8 символов)
     const first8Chars = fio.substring(0, 8);
     // 11000011 11110000 11101000 11110110 11100101 11101101 11101010 11101110
@@ -131,7 +133,7 @@ const calculateGost = () => {
     // а именно первые 8 символов ФИО (ровно Фамилия)
 
     //ГриценкоДмитрийАндреевич
-    const fio = firstName.value + name.value + lastName.value;
+    const fio = firstName.value + ' ' + name.value + ' ' + lastName.value;
     //Гриценко (8 символов)
     const first8Chars = fio.substring(0, 8);
     // 11000011 11110000 11101000 11110110 11100101 11101101 11101010 11101110
@@ -181,7 +183,7 @@ const calculateHash = () => {
     const firstname = firstName.value;
 
     //считаем хеш с использование P, Q, которые мы ввели в поля ввода
-    const hashResult = hash(firstname, +rsaP.value || 1, +rsaQ.value || 1)
+    const hashResult = hash(firstname, +rsaP.value || 1, +rsaQ.value || 1, hashH.value || 1)
 
     return hashResult;
 }
@@ -192,8 +194,10 @@ const calculateHash = () => {
  * @returns {String}
  */
 const calculateEcp = () => {
+    //Получаем нашу Фамилию
+    const firstname = firstName.value;
     //получаем, что мы получили в результате хеширования
-    const hashResult = document.getElementById('hashResult').innerHTML;
+    const hashResult = hash(firstname, +hashP.value || 1, +hashQ.value || 1, hashH.value || 1)
 
     //подписываем наш хеш
     //для этого генрируем RSA ключи на основе того, что ввели в поля ввода

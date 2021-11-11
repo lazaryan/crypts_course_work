@@ -85,14 +85,21 @@ const P = [
  */
 const f = (message = '', key = 0) => {
     //прогоняем наши биты через таблицу перестановок
+    console.log('Начало работы F блока....')
+    console.log('Сообщение: ', message);
+    console.log('Используемый ключ: ', key);
     const epMessage = EP.map(key => message[key - 1]).join('')
+
+    console.log('Прогнали через блок перестановки: ', epMessage)
     //ксорим его с ключем
     const xorInKey = parseInt(epMessage, 2) ^ key;
     //если не хвататет бит, то доводим до 48, добавляя спереди нули
     const stringResultXor = toBinString(xorInKey, 48);
+    console.log('Результат XOR с ключем (48 бит): ', stringResultXor)
 
     //разбиваем нашу строку на подстроки по 6 бит (8 штук)
     const blocks = chunk(stringResultXor, 6)
+    console.log('Разбиваем по 6 бит (8 штук)', blocks)
 
     // прогоняем каждый блок через S блок, где строка - это первые 2 бита, а колонка - остальные 4
     const results = blocks.map(block => {
@@ -102,11 +109,20 @@ const f = (message = '', key = 0) => {
         return S[row][column]
     })
 
+    console.log('Результат прогона через S блоки', results.map(item => toBinString(item, 4)))
+
     //объеденяем все результаты работы S блоков в результирующее сообщение
     const resultMessage = results.reduce((calc, item) =>  (calc += toBinString(item, 4), calc), '');
 
+    console.log('Склеиваем результаты S блоков: ', resultMessage);
+
     //и прогоняем через финальную таблицу перестановок
-    return P.map(key => resultMessage[key - 1]).join('')
+    const PMessage =  P.map(key => resultMessage[key - 1]).join('')
+
+    console.log('Прогоняем через функцию перестановки: ', PMessage)
+    console.log('Конец работы F блока!');
+
+    return PMessage;
 }
 
 module.exports = f;

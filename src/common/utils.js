@@ -48,21 +48,38 @@ const toBinString = (number = 0, len = 1) => {
  * @param {Number} mod - какой берется модуль
  * @returns {Number} - вычисленное выражение (count ^ pow) % mod;
  */
-const smartMod = (count, pow, mod) => {
+const smartMod = (count_i, pow_i, mod) => {
+    let count = count_i;
+    let pow = pow_i;
     let b = 1;
+
+    console.log(`Начало умного возведения ${count} в степень ${pow} по модулю ${mod}...`)
+
+    let message = 'result = ';
 
     while (pow > 1) {
         if (pow % 2 == 1) {
+            message += `((${count} ^ ${pow}) * ${b}) mod ${mod} = `
             b *= count;
-            pow -= 1;
+            pow = pow - 1;
+
+            message += `((${count} ^ ${pow}) * ${b}) mod ${mod} = `
 
             b = b % mod;
+            message += `((${count} ^ ${pow}) * ${b}) mod ${mod} = `
         } else {
+            message += `((${count} ^ 2 ^ ${(pow / 2).toFixed()}) * ${b}) mod ${mod} = `
             pow = (pow / 2).toFixed()
 
             count = (count ** 2) % mod;
+
+            message += `((${count} ^ ${pow}) * ${b}) mod ${mod} = `
         }
     }
+
+    message += `${(count * b) % mod}`;
+
+    console.log('Реультат умного возведения в степень: ', message)
 
     return (count * b) % mod;
 }

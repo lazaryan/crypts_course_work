@@ -13,8 +13,15 @@ module.exports.keygen = keygen;
  * @param {Object} keys - ключи алгоритма RSA, сгенерированные раннее
  * @returns {Number} - зашифрованное сообщение
  */
-module.exports.encryptRSAMessage = (message, keys) => smartMod(
-    parseInt(message, 2),
-    keys.publicKey.e,
-    keys.publicKey.n
-);
+module.exports.encryptRSAMessage = (message, keys) => {
+    console.log('%c------------ RUN ENCRYPT RSA ---------------------', 'color: #a22');
+    const result = smartMod(
+        parseInt(message, 2),
+        keys.publicKey.e,
+        keys.publicKey.n
+    );
+
+    console.log('%c------------ END ENCRYPT RSA ---------------------', 'color: #a22');
+
+    return result;
+}
