@@ -54,7 +54,6 @@ const randomBinGenerate = (len = 1) => {
 // выкидываем каждый 8-ой символ -> 56
 // снова вычеркиваем каждый 8-ой и ис последнего еще 7-ой -> 48
 const generateVariableKey = (message = '') => {
-    console.log("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD", message.length)
     console.log('Начинам генерировать ключ по заданию....')
     console.log('Сообщение: ', message)
     /*const removeISumvol = (message, i) => {
