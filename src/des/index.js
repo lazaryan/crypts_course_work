@@ -56,17 +56,6 @@ const randomBinGenerate = (len = 1) => {
 const generateVariableKey = (message = '') => {
     console.log('Начинам генерировать ключ по заданию....')
     console.log('Сообщение: ', message)
-    /*const removeISumvol = (message, i) => {
-        let str = ''
-
-        for (let j = 0; j < message.length; j++) {
-            if (!j || j % (i - 1) !== 0) {
-                str += message[j]
-            }
-        }
-
-        return str;
-    }*/
 
     const removeISumvol = (message, i) => {
         const arr = chunk(message, i);
