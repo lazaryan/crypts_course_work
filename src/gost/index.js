@@ -1,4 +1,4 @@
-const { toBinString, chunk, r28shl } = require('../common/utils')
+const { toBinString, chunk, r28shl, customXor } = require('../common/utils')
 
 const P = [
   [1, 13, 4, 6, 7, 5, 14, 4],
@@ -43,7 +43,7 @@ const f = (text = '', key = '') => {
     const count = parseInt(item, 2);
     const index = arr.length - i;
 
-    return P[count - 1][index - 1].toString(2);
+    return toBinString(P[count - 1][index - 1], 4);
   });
 
   console.log('Результат прогона через блоки перестановки: ', resultP)
@@ -75,9 +75,13 @@ const gost = (message = '', firstKey = '') => {
 
   console.log('Результат XOR левой части и результата F Function', xor);
 
+  const bestResult = xor + right;
+
+  console.log('Результат вычисления: ', bestResult);
+
   console.log('%c------------ END GOST ---------------------', 'color: #a22');
 
-  return xor;
+  return bestResult;
 }
 
 module.exports = gost;

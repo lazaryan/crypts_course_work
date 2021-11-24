@@ -105,8 +105,19 @@ const getRandomInt = (min, max)  => {
     return ((num << shift) & 0xfffffff) | (num >>> (28 - shift));
 };
 
+const customXor = (left, right) => {
+    const result = left.split('').reduce((calc, el, i) => {
+        calc += el == right[i] ? '0' : '1';
+
+        return calc;
+    }, '');
+
+    return result;
+}
+
 module.exports.smartMod = smartMod;
 module.exports.getRandomInt = getRandomInt;
 module.exports.chunk = chunk;
 module.exports.toBinString = toBinString;
 module.exports.r28shl = r28shl;
+module.exports.customXor = customXor;

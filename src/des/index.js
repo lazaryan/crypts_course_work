@@ -1,6 +1,6 @@
 const keygen = require('./keygen');
 const f = require('./fFunction');
-const { toBinString } = require('../common/utils')
+const { toBinString, chunk } = require('../common/utils')
 
 //таблица перестановок на входе в алгоритм
 const IP = [
@@ -26,6 +26,16 @@ const FINAL_IP = [
     33, 1, 41, 9, 49, 17, 57, 25
 ];
 
+const customXor = (left, right) => {
+    const result = left.split('').reduce((calc, el, i) => {
+        calc += el == right[i] ? '0' : '1';
+
+        return calc;
+    }, '');
+
+    return result;
+}
+
 /**
  * Функция генератор случайного рандмного числа заданной длины
  * @param {Number} len : Длина выходного бинарного числа
@@ -44,30 +54,38 @@ const randomBinGenerate = (len = 1) => {
 // выкидываем каждый 8-ой символ -> 56
 // снова вычеркиваем каждый 8-ой и ис последнего еще 7-ой -> 48
 const generateVariableKey = (message = '') => {
+    console.log("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD", message.length)
     console.log('Начинам генерировать ключ по заданию....')
     console.log('Сообщение: ', message)
-    const removeISumvol = (message, i) => {
+    /*const removeISumvol = (message, i) => {
         let str = ''
 
         for (let j = 0; j < message.length; j++) {
-            if (!j || j % i !== 0) {
+            if (!j || j % (i - 1) !== 0) {
                 str += message[j]
             }
         }
 
         return str;
+    }*/
+
+    const removeISumvol = (message, i) => {
+        const arr = chunk(message, i);
+
+        return arr.map(str => str.substring(0, 7)).join('');
     }
 
     const round1 = removeISumvol(message, 8);
-    console.log('Убрали раз каждый 8-ой', round1);
+    console.log('Убрали раз каждый 8-ой (весб ключ)', round1);
+
     const round2 = removeISumvol(round1, 8);
-    console.log('Убрали двас каждый 8-ой', round2);
+    console.log('Убрали два каждый 8-ой', round2);
 
 
     const arrRound2 = round2.split('');
     arrRound2.splice(round2.length - 2, 1)
 
-    console.log('Убрали предпоследний: (сгенерированный ключ) ', arrRound2.join(''))
+    console.log('Убрали предпоследний: (сгенерированный раундовый ключ) ', arrRound2.length, arrRound2.join(''))
     console.log('Конец генерации ключа!')
 
     return arrRound2.join('');
@@ -112,12 +130,12 @@ const des = (message = '', initialKey = '') => {
     //Xor-им левую и правую часть
     const xorRound = parseInt(left, 2) ^ parseInt(rigthAfterF, 2)
     //приводим к 32-ум битам
-    const strXorRound = toBinString(xorRound, 32)
+    const strXorRound = /*toBinString(xorRound, 32)*/ customXor(left, rigthAfterF)
     console.log('Результат XOR левой части и новой правой: ', strXorRound)
     //конец 1-го раунда
 
     //объеденяем обе части
-    const result = strXorRound + rigthAfterF;
+    const result = right + strXorRound;
 
     console.log('Результат объединения левой и правой части: ', result)
 

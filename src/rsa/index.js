@@ -15,6 +15,8 @@ module.exports.keygen = keygen;
  */
 module.exports.encryptRSAMessage = (message, keys) => {
     console.log('%c------------ RUN ENCRYPT RSA ---------------------', 'color: #a22');
+    console.log('Исодное сообщение: ', message);
+    console.log('Исодное сообщение (десятичное число): ', parseInt(message, 2));
     const result = smartMod(
         parseInt(message, 2),
         keys.publicKey.e,

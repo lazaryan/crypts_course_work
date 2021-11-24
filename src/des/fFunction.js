@@ -76,6 +76,16 @@ const P = [
     22, 11, 4, 25
 ];
 
+const customXor = (left, right) => {
+    const result = left.split('').reduce((calc, el, i) => {
+        calc += el == right[i] ? '0' : '1';
+
+        return calc;
+    }, '');
+
+    return result;
+}
+
 /**
  * ## F функция, через которую проходит каждый раунд одна половинка алгоритма `DES`
  * 
@@ -86,15 +96,16 @@ const P = [
 const f = (message = '', key = 0) => {
     //прогоняем наши биты через таблицу перестановок
     console.log('Начало работы F блока....')
-    console.log('Сообщение: ', message);
-    console.log('Используемый ключ: ', key);
+    console.log('Сообщение: ', message, message.length);
+    console.log('Используемый ключ: ', key, key.length);
     const epMessage = EP.map(key => message[key - 1]).join('')
 
     console.log('Прогнали через блок перестановки: ', epMessage)
     //ксорим его с ключем
-    const xorInKey = parseInt(epMessage, 2) ^ key;
+    //const xorInKey = parseInt(epMessage, 2) ^ parseInt(key, 2);
     //если не хвататет бит, то доводим до 48, добавляя спереди нули
-    const stringResultXor = toBinString(xorInKey, 48);
+    //const stringResultXor = toBinString(xorInKey, 48);
+    const stringResultXor = customXor(epMessage, key);
     console.log('Результат XOR с ключем (48 бит): ', stringResultXor)
 
     //разбиваем нашу строку на подстроки по 6 бит (8 штук)
