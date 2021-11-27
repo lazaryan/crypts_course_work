@@ -37,13 +37,18 @@ const f = (text = '', key = '') => {
 
   const chunkArray = chunk(resultSum32, 4);
 
-  console.log('Рпзбили на блоки по 4 бита: ', chunkArray)
+  console.log('Разбили на блоки по 4 бита: ', chunkArray)
 
-  const resultP = chunkArray.map((item, i, arr) => {
+  console.log('Прогоняем через таблицу....');
+
+  const resultP = chunkArray.map((item, i) => {
     const count = parseInt(item, 2);
-    const index = arr.length - i;
 
-    return toBinString(P[count - 1][index - 1], 4);
+    const result = toBinString(P[count][i], 4);
+
+    console.log(`Вход: ${item} (${count}); Позиция: ${8 - i}; Result: ${result}`);
+
+    return result;
   });
 
   console.log('Результат прогона через блоки перестановки: ', resultP)
