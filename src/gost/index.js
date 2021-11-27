@@ -19,6 +19,13 @@ const P = [
   [12, 12, 14, 2, 3, 11, 9, 3]
 ]
 
+const shiftBit = (str, count) => {
+  const left = str.substring(0, count);
+  const right = str.substring(count);
+
+  return right + left;
+}
+
 const f = (text = '', key = '') => {
   console.log('%cНачинам прогонять правую часть через f function....', 'color: #e1de0a')
   console.log('Исходный текст: ', text);
@@ -53,13 +60,13 @@ const f = (text = '', key = '') => {
 
   console.log('Результат прогона через блоки перестановки: ', resultP)
 
-  const shiftResult = r28shl(parseInt(resultP.join(''), 2), 11);
+  const shiftResult = shiftBit(resultP.join(''), 11);
 
-  console.log('Делаем сдвиг на 11 бит: ', shiftResult.toString(2))
+  console.log('Делаем сдвиг на 11 бит: ', shiftResult)
 
   console.log('%cКонец прогона через F Function!!!', 'color: #e1de0a')
 
-  return shiftResult;
+  return parseInt(shiftResult, 2);
 }
 
 const gost = (message = '', firstKey = '') => {
