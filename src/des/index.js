@@ -71,7 +71,7 @@ const generateVariableKey = (message = '') => {
 
 
     const arrRound2 = round2.split('');
-    arrRound2.splice(round2.length - 2, 1)
+    arrRound2.splice(round2.length - 1, 1)
 
     console.log('Убрали предпоследний: (сгенерированный раундовый ключ) ', arrRound2.length, arrRound2.join(''))
     console.log('Конец генерации ключа!')
